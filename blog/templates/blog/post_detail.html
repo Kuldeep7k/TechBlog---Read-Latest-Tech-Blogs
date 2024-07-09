@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Post Detail - TechBlog
+{% endblock %}
+
+{% block content %}
+  <div class="container my-4">
+    {% if comment_form.errors %}
+      <div id="alert">
+        <h2>Saving the comment failed!</h2>
+        <p>Please check the comment form below the post and fix your erros.</p>
+        <a href="#comment-form">Fix!</a>
+      </div>
+    {% endif %}
+    <h1 class="text-center mb-4">Post Details</h1>
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card">
+          <div class="d-flex justify-content-center align-items-center">
+            <img src="{{ post.image.url }}" class="card-img-top w-50" alt="{{ post.title }}" />
+          </div>
+          <div class="card-body">
+            <h2 class="card-title text-center">{{ post.title }}</h2>
+
+            <div>
+              <h5>Tags:</h5>
+              <ul>
+                {% for tag in post_tags %}
+                  <li>{{ tag.caption }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div>
+              <form action="{% url 'read_later' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value="{{ post.id }}" />
+                {% if saved_for_later %}
+                <button type="submit" class="btn btn-warning">Remove from Read Later</button>
+                {% else %}
+                <button type="submit" class="btn btn-warning">Read Later</button>
+                {% endif %}
+              
+              </form>
+            </div>
+
+            <hr />
+            {% if post.author %}
+              <p class="card-text">
+                <strong>Author:</strong> {{ post.author.first_name }} {{ post.author.last_name }} (<a href="mailto:{{ post.author.email }}">{{ post.author.email }}</a>)
+              </p>
+            {% endif %}
+            <p class="card-text">
+              <strong>Date:</strong> {{ post.date|date:'F d, Y' }}
+            </p>
+            <p class="card-text">{{ post.content|linebreaks }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if comments is not None %}
+    <section id="comments">
+      <ul>
+        {% for i in comments %}
+          <li>
+            <h3>{{ i.user_name }}</h3>
+            {{ i.text|linebreaks }}
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+    
+
+    <section id="comment-form">
+      <h2>Your Comment</h2>
+      <form action="{% url 'post_detail' post.slug %}" method="POST">
+        {% csrf_token %}
+        {% for form_field in comment_form %}
+          <div class="form-control {% if form_field.errors %}{% endif %}">{{ form_field.label_tag }}
+            {{ form_field }}
+            {{ form_field.errors }}</div>
+        {% endfor %}
+        <button>Save Comment</button>
+      </form>
+    </section>
+  </div>
+{% endblock %}

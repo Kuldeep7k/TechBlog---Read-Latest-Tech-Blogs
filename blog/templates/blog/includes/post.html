@@ -1,0 +1,11 @@
+<div class="col">
+  <a href="{% url 'post_detail' post.slug %}" class="card-link">
+    <div class="card h-100">
+      <div class="card-body">
+        <img src="{{ post.image.url }}" class="img-fluid rounded card-img" alt="pic" />
+        <h5 class="card-subtitle my-2 text-body-secondary">{{ post.title }}</h5>
+        <p class="card-text">{{ post.excerpt }}</p>
+      </div>
+    </div>
+  </a>
+</div>

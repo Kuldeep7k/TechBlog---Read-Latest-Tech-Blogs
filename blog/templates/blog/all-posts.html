@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  All Posts - TechBlog
+{% endblock %}
+
+{% block content %}
+  <div class="container text-center my-2" id="main-section">
+    <h4 class="mb-4">All Posts</h4>
+
+    <div class="row row-cols-1 row-cols-md-3">
+      {% for post in all_posts %}
+        <div class="col mb-4">
+          <div class="card h-100">
+            <a href="{% url 'post_detail' post.slug %}"><img src="{{ post.image.url }}" 
+              class="card-img-top" alt="{{ post.title }}" style="height: 300px; object-fit: cover;" /></a>
+            <div class="card-body">
+              <h5 class="card-title">{{ post.title }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Author: {{ post.author }}</h6>
+              <p class="card-text">{{ post.excerpt }}</p>
+              <p class="card-text">Date: {{ post.date }}</p>
+              <a href="{% url 'post_detail' post.slug %}" class="btn btn-primary">Read more</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
